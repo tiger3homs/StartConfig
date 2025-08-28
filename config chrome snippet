@@ -25,16 +25,15 @@
                         form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
                     }
                 });
-                executed = true; // mark as done, won't spam anymore
+                executed = true; 
             }
         }
 
-        // Reset executed when timer reaches 0
         if (timer && timer.innerHTML === '0:00') {
             executed = false;
         }
 
-        setTimeout(poll$, 500); // check more often but won't spam
+        setTimeout(poll$, 500); 
     }
 
     poll$();
