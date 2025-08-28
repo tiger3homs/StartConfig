@@ -1,10 +1,13 @@
 
 (function() {
     const commands = [
-        ['bind "f1" "say is it live?"', true],
-        ['bind "f2" "say LIVE"', true],
-        ["cl_lw 1", true],
-        ["cl_lc 1", true],
+        ['bind "f1" "say is it live? 🎥❓"', true],
+        ['bind "f2" "say LIVE 🔴✨"', true],
+        ['bind "f3" "say NOT LIVE ⚪❌"', true],
+        ['bind "f4" "say KNIVES 🔪🗡️"', true],
+
+            ["cl_lw 1", true],
+            ["cl_lc 1", true],
 
     ];
 
