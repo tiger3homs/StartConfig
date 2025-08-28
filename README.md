@@ -2,16 +2,6 @@ Auto Command Snippet for [play-cs.com]
 
 This snippet automatically executes predefined commands in the in-game chat at the start of each round. It is designed to enhance gameplay by automating repetitive tasks, like binding keys or sending initial messages, without interfering with normal chat use.
 
-Features
-
-Automatically runs a list of user-defined commands once per round.
-
-Resets when the round ends (0:00 timer), ready for the next round.
-
-Does not overwrite your chat input after execution.
-
-Easy to customize commands by editing a simple array.
-
 Installation / Usage
 
 1. Open DevTools.
@@ -52,6 +42,16 @@ When the timer is not 0:00 and commands have not yet been executed this round, i
 Once the commands are executed, the snippet does not run again until the next round.
 
 You can still type and use the chat normally—your input will not be overwritten.
+
+Features
+
+Automatically runs a list of user-defined commands once per round.
+
+Resets when the round ends (0:00 timer), ready for the next round.
+
+Does not overwrite your chat input after execution.
+
+Easy to customize commands by editing a simple array.
 
 Important Notes
 
