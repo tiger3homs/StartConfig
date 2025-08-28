@@ -6,7 +6,10 @@
         ['bind "f3" "say NOT LIVE ⚪❌"', true],
         ['bind "f4" "say KNIVES 🔪🗡️"', true],
 
+        ['bind "f5" "deagle"', true],
         ['bind "f8" "flash;flash;sgren;"', true],
+
+
 
 
 
