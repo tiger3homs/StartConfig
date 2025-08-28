@@ -55,6 +55,8 @@ Easy to customize commands by editing a simple array.
 
 Important Notes
 
+Run the snippet after you joined the server
+
 Make sure your commands are correct; syntax errors may prevent the snippet from running.
 
 This snippet is safe for Chrome and requires no additional extensions.
