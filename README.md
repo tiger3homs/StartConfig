@@ -1,4 +1,4 @@
-Auto Command Snippet for [play-cs.com]
+Auto Command Snippet for http://www.play-cs.com/
 
 This snippet automatically executes predefined commands in the in-game chat at the start of each round. It is designed to enhance gameplay by automating repetitive tasks, like binding keys or sending initial messages, without interfering with normal chat use.
 
