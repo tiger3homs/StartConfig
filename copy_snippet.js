@@ -6,6 +6,11 @@
         ['bind "f3" "say NOT LIVE ⚪❌"', true],
         ['bind "f4" "say KNIVES 🔪🗡️"', true],
 
+        ['bind "f8" "flash;flash;sgren;"', true],
+
+
+
+
             ["cl_lw 1", true],
             ["cl_lc 1", true],
 
