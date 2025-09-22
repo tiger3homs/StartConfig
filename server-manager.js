@@ -53,11 +53,13 @@
         isPublic: true,
         checkboxes: {
           'mp_friendlyfire': true, 'mp_autoteambalance': false, 'mp_afkbomb': true,
-          'afk_kick': true, 'statistics': true, 'votekick': false, 'bonus_slot': false
+          'afk_kick': false, 'statistics': true, 'votekick': false, 'bonus_slot': false,
+          'tfb': false, 'statsx': false, 'dib3': false, 'rwd_grenadedrop': true
+           
         },
         dropdowns: {
           'minimal_skill': '0', 'ping_limit': '1000', 'mp_roundtime': '1.75',
-          'mp_buytime': '0.25', 'mp_c4timer': '35', 'mp_freezetime': '1',
+          'mp_buytime': '0.25', 'mp_c4timer': '35', 'mp_freezetime': '15',
           'mp_startmoney': '800', 'csem_sank_cd': '300', 'limit_hegren': '1',
           'limit_sgren': '1', 'limit_flash': '2'
         }
@@ -67,7 +69,7 @@
         checkboxes: {
           'mp_friendlyfire': true, 'mp_autoteambalance': true, 'mp_afkbomb': true,
           'afk_kick': true, 'statistics': true, 'votekick': true, 'bonus_slot': true,
-          'tfb': true, 'statsx': true, 'dib3': true, 'rwd_grenadedrop': true
+          'tfb': false, 'statsx': true, 'dib3': true, 'rwd_grenadedrop': true
         },
         dropdowns: {
           'minimal_skill': '0', 'ping_limit': '1000', 'mp_roundtime': '2.5',
