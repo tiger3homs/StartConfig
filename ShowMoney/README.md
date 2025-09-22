@@ -27,7 +27,7 @@ To use this script, you first need a user script manager extension for your brow
     *   [Tampermonkey for Safari](https://apps.apple.com/us/app/tampermonkey/id1482490089)
 
 2.  **Install the Script**:
-    *   Navigate to the script file in this repository (`your_script_name.user.js`).
+    *   Navigate to the script file in this repository (`show-money.user.js`).
     *   Click the **"Raw"** button at the top right of the file viewer.
     *   Tampermonkey will automatically open a new tab and ask you to confirm the installation.
     *   Click **"Install"**.
