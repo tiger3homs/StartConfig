@@ -95,7 +95,6 @@ const CONFIG = {
     *   Click "Create Webhook".
     *   Give it a name (e.g., "Play-CS Manager"), choose a channel, and copy the "Webhook URL".
     *   <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/e232865a-bc1f-4412-b9eb-f7ccb59e86ef" />
-)`
 2.  **Configure in Play-CS.com:**
     *   Paste the copied Webhook URL into the "Webhook URL" input field in the "Discord Webhook Configuration" section on the Play-CS.com server management page.
     *   Click "Save Webhook". The status will update to "Webhook Active".
