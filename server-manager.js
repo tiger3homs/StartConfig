@@ -288,19 +288,6 @@
   };
 
   /**
-   * Cleans up the "Promoted until" display in server table cells.
-   */
-  const cleanupPromoInfo = () => {
-    $$(CONFIG.uiSelectors.promoCells).forEach(cell => {
-      const htmlContent = cell.innerHTML;
-      const promotedMatch = htmlContent.match(/Promoted until:<br>[\s\S]*/);
-      if (promotedMatch && promotedMatch[0]) {
-        cell.innerHTML = promotedMatch[0].trim();
-      }
-    });
-  };
-
-  /**
    * Adds buttons to apply predefined server mode presets to all servers.
    */
   const initServerModePresets = () => {
@@ -541,7 +528,6 @@
     initMapPicker();
     fixServerLinks();
     initCollapsibleSections();
-    cleanupPromoInfo();
     initServerModePresets();
     cleanupUI();
     setupPostSaveLinkFix();
