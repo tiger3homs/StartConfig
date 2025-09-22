@@ -1,4 +1,4 @@
-# CS Game Auto-Exec User Script
+# CS UserConfig
 
 ## Overview
 
