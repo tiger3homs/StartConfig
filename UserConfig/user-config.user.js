@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         CS User Config
+// @name         CS User Config (Executes on Join)
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  Automatically executes a set of commands in the game console when a match starts.
-// @author       tiger3homs aka obbe.00 on discord
+// @version      0.4
+// @description  Automatically executes a set of commands once when you join a server.
+// @author       tiger3homs aka obbe.00 on discord (Improved by Gemini)
 // @match        https://game.play-cs.com/*
 // @grant        none
 // ==/UserScript==
@@ -11,44 +11,62 @@
 (function() {
     'use strict';
 
+    // --- Configuration ---
+    // Manage your commands here. Set 'enabled' to false to disable one without deleting it.
     const commands = [
-        ['bind "MWHEELDOWN" "-duck"', true],
-        ['bind "MWHEELUP" "+duck"', true],
-        ['bind "f3" "say NOtt LIVE ⚪❌"', true],
-        ['bind "f4" "say KNIVES 🔪🗡️"', true],
-
-        ['bind "f8" "flash;flash;sgren;"', true],
-        ['bind "f5" "deagle;secammo"', true],
-        ["cl_lw 1", true],
-        ["cl_lc 1", true],
-
-          ["cl_bob 0", true],
-          ["stopsound", true],
-          ["ducks", true],
-          ["minmodels", true],
-
+        { command: 'bind "MWHEELDOWN" "-duck"',       enabled: true },
+        { command: 'bind "MWHEELUP" "+duck"',         enabled: true },
+        { command: 'bind "f3" "say NOtt LIVE ⚪❌"', enabled: true },
+        { command: 'bind "f4" "say KNIVES 🔪🗡️"',   enabled: true },
+        { command: 'bind "f8" "flash;flash;sgren;"', enabled: true },
+        { command: 'bind "f5" "deagle;secammo"',     enabled: true },
+        { command: "cl_lw 1",                       enabled: true },
+        { command: "cl_lc 1",                       enabled: true },
+        { command: "cl_bob 0",                      enabled: true },
+        { command: "stopsound",                     enabled: true },
+        { command: "ducks",                         enabled: true },
+        { command: "minmodels",                     enabled: true },
     ];
 
-    let executed = false;
+    /**
+     * Attempts to find the in-game UI and execute commands.
+     * This function is designed to be run repeatedly until it succeeds.
+     */
+    function initializeConfig() {
+        const form = document.querySelector('.hud-message-input form');
+        const inputField = document.querySelector('.hud-message-input input');
 
-    function poll$() {
-        const timer = document.querySelector('.hud-timer-text');
-        if (timer && timer.innerHTML !== '0:00' && !executed) {
-            const form = document.querySelector('.hud-message-input form');
-            const inputField = document.querySelector('.hud-message-input input');
-            if (form && inputField) {
-                commands.forEach(([cmd, enabled]) => {
-                    if (enabled) {
-                        inputField.value = `;${cmd}`;
-                        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-                    }
-                });
-                executed = true; // runs once, never resets
-            }
+        // If these elements don't exist yet, it means we are not in a game.
+        // We will return and wait for the next check.
+        if (!form || !inputField) {
+            return;
         }
 
-        setTimeout(poll$, 500);
+        // --- UI is found, so we can proceed ---
+
+        // Stop the interval immediately. This ensures the commands only run ONCE.
+        clearInterval(initializationInterval);
+
+        console.log('CS User Config: In-game UI detected. Executing commands...');
+
+        // A brief delay to ensure the game is fully ready to accept input.
+        setTimeout(() => {
+            commands.forEach(({ command, enabled }) => {
+                if (enabled) {
+                    inputField.value = `;${command}`;
+                    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+                }
+            });
+
+            console.log('CS User Config: All commands have been executed for this session.');
+        }, 500);
     }
 
-    poll$();
+    // --- Initialization ---
+
+    console.log('CS User Config: Script loaded. Waiting for user to join a server...');
+
+    // Periodically check for the in-game UI. Once it's found, the interval will be cleared.
+    const initializationInterval = setInterval(initializeConfig, 1000); // Check every second.
+
 })();
