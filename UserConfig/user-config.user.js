@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         CS User Config (Executes on Join)
+// @name         CS User Config (Reliable Join Execution)
 // @namespace    http://tampermonkey.net/
-// @version      0.4
-// @description  Automatically executes a set of commands once when you join a server.
+// @version      0.5
+// @description  Automatically executes a set of commands once when you join a server, now with improved timing.
 // @author       tiger3homs aka obbe.00 on discord (Improved by Gemini)
 // @match        https://game.play-cs.com/*
 // @grant        none
@@ -12,7 +12,6 @@
     'use strict';
 
     // --- Configuration ---
-    // Manage your commands here. Set 'enabled' to false to disable one without deleting it.
     const commands = [
         { command: 'bind "MWHEELDOWN" "-duck"',       enabled: true },
         { command: 'bind "MWHEELUP" "+duck"',         enabled: true },
@@ -29,23 +28,17 @@
     ];
 
     /**
-     * Attempts to find the in-game UI and execute commands.
-     * This function is designed to be run repeatedly until it succeeds.
+     * Executes the commands once the in-game UI is confirmed to be present.
      */
-    function initializeConfig() {
+    function executeConfig() {
         const form = document.querySelector('.hud-message-input form');
         const inputField = document.querySelector('.hud-message-input input');
 
-        // If these elements don't exist yet, it means we are not in a game.
-        // We will return and wait for the next check.
+        // This check is a final safeguard, though it should always pass by this point.
         if (!form || !inputField) {
+            console.error('CS User Config: Could not find chat elements after UI was detected.');
             return;
         }
-
-        // --- UI is found, so we can proceed ---
-
-        // Stop the interval immediately. This ensures the commands only run ONCE.
-        clearInterval(initializationInterval);
 
         console.log('CS User Config: In-game UI detected. Executing commands...');
 
@@ -57,16 +50,33 @@
                     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
                 }
             });
-
             console.log('CS User Config: All commands have been executed for this session.');
         }, 500);
     }
 
-    // --- Initialization ---
+    /**
+     * Starts an interval that repeatedly checks for the in-game UI.
+     * This is the function that will run once the page is fully loaded.
+     */
+    function startCheckingForGame() {
+        console.log('CS User Config: Page loaded. Now waiting for user to join a server...');
 
-    console.log('CS User Config: Script loaded. Waiting for user to join a server...');
+        const initializationInterval = setInterval(() => {
+            // We only need to check for one of the elements.
+            const gameUIElement = document.querySelector('.hud-message-input');
 
-    // Periodically check for the in-game UI. Once it's found, the interval will be cleared.
-    const initializationInterval = setInterval(initializeConfig, 1000); // Check every second.
+            if (gameUIElement) {
+                // UI is found! Stop checking and run the commands.
+                clearInterval(initializationInterval);
+                executeConfig();
+            }
+        }, 1000); // Check every second.
+    }
+
+    // --- Main Execution ---
+    // This is the most important change.
+    // We wait for the entire window, including all scripts and assets, to fully load.
+    // Only THEN do we start checking for the in-game UI.
+    window.addEventListener('load', startCheckingForGame);
 
 })();
