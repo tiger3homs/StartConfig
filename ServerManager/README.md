@@ -100,7 +100,7 @@ const CONFIG = {
     *   Paste the copied Webhook URL into the "Webhook URL" input field in the "Discord Webhook Configuration" section on the Play-CS.com server management page.
     *   Click "Save Webhook". The status will update to "Webhook Active".
 3.  **Share Server Details:**
-    *   Click the "Share All to Discord 🚀" button. A message containing the map, link, and PIN for each of your servers will be sent to the configured Discord channel.
+    *   Click the "Share to Discord 🚀" button. A message containing the map, link, and PIN for your server will be sent to the configured Discord channel.
 
 ## Contributing
 
