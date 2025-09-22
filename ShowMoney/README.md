@@ -1,6 +1,6 @@
 # CS Game Status Announcer
 
-A Tampermonkey user script for the browser game `game.play-cs.com`. This script allows players to quickly and easily announce their current in-game money and primary weapon to their team chat with a single keypress.
+A Tampermonkey user script for the browser game `www.play-cs.com`. This script allows players to quickly and easily announce their current in-game money and primary weapon to their team chat with a single keypress.
 
 ## Original Source
 
