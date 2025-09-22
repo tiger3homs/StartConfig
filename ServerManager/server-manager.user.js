@@ -62,7 +62,7 @@
           'minimal_skill': '0', 'ping_limit': '1000', 'mp_roundtime': '1.75',
           'mp_buytime': '0.25', 'mp_c4timer': '35', 'mp_freezetime': '15',
           'mp_startmoney': '800', 'csem_sank_cd': '300', 'limit_hegren': '1',
-          'limit_sgren': '1', 'limit_flash': '2'
+          'limit_sgren': '1', 'limit_flash': '2', 'pb_maxbots': '0'
         }
       },
       deathmatch: {
