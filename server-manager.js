@@ -80,7 +80,8 @@
   };
 
   // --- Discord Webhook Configuration ---
-  const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1417697895196393502/7iLn-5ClcmrU_ZQ5EH300Aie22WwvznPYyzwGSEN8fRHAzQosQF86t9mvqqeCBxF9c8W';
+  // DEFAULT_DISCORD_WEBHOOK_URL removed as per request.
+  const LOCAL_STORAGE_WEBHOOK_KEY = 'playcs_custom_discord_webhook';
 
   // --- Utility Functions ---
   const $ = selector => document.querySelector(selector);
@@ -122,12 +123,27 @@
   };
 
   /**
+   * Retrieves the Discord webhook URL from localStorage.
+   * @returns {string | null} The Discord webhook URL or null if not set.
+   */
+  const getDiscordWebhookUrl = () => {
+    return localStorage.getItem(LOCAL_STORAGE_WEBHOOK_KEY);
+  };
+
+  /**
    * Sends a plaintext message to the configured Discord webhook.
    * @param {string} content The message content.
    */
   const sendPlaintextDiscordMessage = async (content) => {
+    const webhookUrl = getDiscordWebhookUrl(); // Get the user's webhook URL
+    if (!webhookUrl) {
+      alert('Error: No Discord Webhook URL configured. Please set one in the configuration section.');
+      console.error('No Discord Webhook URL configured.');
+      return;
+    }
+
     try {
-      const response = await fetch(DISCORD_WEBHOOK_URL, {
+      const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: content, username: 'Play-CS Server Manager' }),
@@ -135,13 +151,14 @@
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Failed to send message to Discord:', response.status, errorData);
-        alert(`Failed to send message to Discord. Status: ${response.status}. Error: ${errorData.message || 'Unknown error.'}`);
+        alert(`Failed to send message to Discord. Status: ${response.status}. Error: ${errorData.message || 'Unknown error.'}\nUsing webhook: ${webhookUrl}`);
       } else {
         console.log('Message sent to Discord successfully!');
+        alert('Message sent to Discord successfully!');
       }
     } catch (error) {
       console.error('Error sending message to Discord:', error);
-      alert('An error occurred while trying to send message to Discord.');
+      alert('An error occurred while trying to send message to Discord. Please check your webhook URL and network connection.');
     }
   };
 
@@ -162,7 +179,7 @@
 
     const map = mapSelect ? mapSelect.value : 'N/A';
     const pin = pinInput ? pinInput.value : 'N/A';
-    const serverName = serverRow.querySelector('td.server-info-cell > b')?.textContent || `Server ${serverID}`; // Added to get server name
+    const serverName = serverRow.querySelector('td.server-info-cell > b')?.textContent || `Server ${serverID}`;
 
     return `Map: \`${map}\`\nLink: ${serverLink}\nPIN: \`${pin}\``;
   };
@@ -188,7 +205,7 @@
         if (availableMaps.has(map)) {
           const btn = createElement('button', {
             className: 'save-btn3',
-            style: { marginBottom: '3px', marginRight: '3px' },
+            style: { marginBottom: '3px', marginRight: '3px', color: 'black' },
             onclick: (e) => {
               e.preventDefault();
               mapSelect.value = map;
@@ -203,7 +220,7 @@
       const searchInput = createElement('input', {
         type: 'text',
         placeholder: 'Type to search map...',
-        style: { marginLeft: '5px', padding: '2px 4px', width: '150px' },
+        style: { marginLeft: '5px', padding: '2px 4px', width: '150px', color: 'black', backgroundColor: 'white' },
         oninput: () => {
           const filter = searchInput.value.toLowerCase();
           let firstMatch = null;
@@ -213,11 +230,11 @@
             if (!firstMatch && match) firstMatch = opt;
           });
           if (firstMatch) mapSelect.value = firstMatch.value;
-          mapSelect.dispatchEvent(new Event('change', { bubbles: true })); // Trigger change for UI consistency
+          mapSelect.dispatchEvent(new Event('change', { bubbles: true }));
         },
         onkeydown: (e) => {
           if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent form submission
+            e.preventDefault();
             mapSelect.focus();
           }
         }
@@ -343,9 +360,9 @@
         style: { marginRight: '5px', color: 'black' },
         onclick: (e) => {
           e.preventDefault();
-          applyPresetToAllServers(modeName, CONFIG.serverPresets[modeName]); // Pass modeName and presetConfig
+          applyPresetToAllServers(modeName, CONFIG.serverPresets[modeName]);
         }
-      }, modeName.charAt(0).toUpperCase() + modeName.slice(1)); // Capitalize name
+      }, modeName.charAt(0).toUpperCase() + modeName.slice(1));
       modeContainer.appendChild(btn);
     }
     myServersForm.parentNode.insertBefore(modeContainer, myServersForm);
@@ -379,7 +396,7 @@
     $$(CONFIG.uiSelectors.saveButtons).forEach(button => {
       button.addEventListener('click', () => {
         console.log('Save button clicked, scheduling link fix in 2 seconds...');
-        setTimeout(fixServerLinks, 2000); // Wait 2 seconds, then re-run fixServerLinks
+        setTimeout(fixServerLinks, 2000);
       });
     });
   };
@@ -388,34 +405,129 @@
    * Adds a single "Share to Discord" button near the main Save button.
    */
   const addShareAllDiscordButton = () => {
-    // Use the mainSaveButton selector for placement
     const mainSaveBtn = $(CONFIG.uiSelectors.mainSaveButton);
     if (mainSaveBtn) {
       const shareAllBtn = createElement('button', {
-        className: 'save-btn3', // Keep similar styling
-        style: { marginLeft: '10px', backgroundColor: '#7289DA', color: 'white' }, // Discord blue
+        className: 'save-btn3',
+        style: { marginLeft: '10px', backgroundColor: '#7289DA', color: 'white' },
         onclick: async (e) => {
           e.preventDefault();
+          if (!getDiscordWebhookUrl()) { // Check if a webhook is configured
+              alert('Please configure your Discord Webhook URL in the section above before sharing.');
+              return;
+          }
+
           const servers = Array.from($$(CONFIG.uiSelectors.servers));
           if (servers.length === 0) {
             alert('No servers found to share to Discord!');
             return;
           }
 
-          let fullMessage = "\n"; // Start with a clear header
+          let fullMessage = "\n\n";
           servers.forEach(server => {
-            fullMessage += formatServerMessage(server) + "\n\n"; // Add extra newline for spacing
+            fullMessage += formatServerMessage(server) + "\n\n";
           });
 
           await sendPlaintextDiscordMessage(fullMessage);
-          // Removed alert here as `sendPlaintextDiscordMessage` already handles success/failure alerts
         }
-      }, 'Share to Discord 🚀'); // Changed text for clarity and added icon
+      }, 'Share All to Discord 🚀');
       mainSaveBtn.parentNode.insertBefore(shareAllBtn, mainSaveBtn.nextSibling);
     }
   };
 
+  /**
+   * Adds a section to allow users to input and save their Discord Webhook URL.
+   */
+  const addDiscordWebhookConfigSection = () => {
+    const existingWebhook = localStorage.getItem(LOCAL_STORAGE_WEBHOOK_KEY) || '';
+    const hasCustomWebhook = !!existingWebhook; // True if a custom webhook exists
 
+    const webhookSection = createElement('div', {
+      id: 'discord-webhook-config',
+      style: {
+        background: '#36393F',
+        color: 'white',
+        padding: '15px',
+        borderRadius: '8px',
+        marginBottom: '20px',
+        border: '1px solid #23272A'
+      }
+    },
+
+      createElement('div', { style: { display: 'flex', alignItems: 'center', marginBottom: '10px' } },
+        createElement('label', { htmlFor: 'customWebhookUrl', style: { marginRight: '10px', minWidth: '100px' } }, 'Webhook URL:'),
+        createElement('input', {
+          type: 'text',
+          id: 'customWebhookUrl',
+          placeholder: 'e.g., https://discord.com/api/webhooks/your_id/your_token',
+          value: existingWebhook,
+          style: {
+            flexGrow: '1',
+            padding: '8px',
+            borderRadius: '4px',
+            border: '1px solid #555',
+            backgroundColor: '#2F3136',
+            color: 'white'
+          }
+        })
+      ),
+      createElement('div', { style: { display: 'flex', justifyContent: 'flex-start', alignItems: 'center' } },
+        createElement('button', {
+          className: 'save-btn3',
+          style: { backgroundColor: '#7289DA', color: 'white', marginRight: '10px' },
+          onclick: (e) => {
+            e.preventDefault();
+            const input = $('#customWebhookUrl');
+            const url = input.value.trim();
+            if (url) {
+              localStorage.setItem(LOCAL_STORAGE_WEBHOOK_KEY, url);
+              alert('Discord Webhook URL saved successfully!');
+              updateWebhookStatus(true);
+            } else {
+              localStorage.removeItem(LOCAL_STORAGE_WEBHOOK_KEY);
+              alert('Webhook URL cleared. Discord sharing is now disabled until a new URL is provided.');
+              updateWebhookStatus(false);
+            }
+          }
+        }, 'Save Webhook'),
+        createElement('button', {
+          className: 'save-btn3',
+          style: { backgroundColor: '#DC3545', color: 'white' },
+          onclick: (e) => {
+            e.preventDefault();
+            $('#customWebhookUrl').value = '';
+            localStorage.removeItem(LOCAL_STORAGE_WEBHOOK_KEY);
+            alert('Webhook URL cleared. Discord sharing is now disabled until a new URL is provided.');
+            updateWebhookStatus(false);
+          }
+        }, 'Clear Webhook'),
+        createElement('span', {
+            id: 'webhook-status',
+            style: { marginLeft: '15px', fontWeight: 'bold' }
+        }, hasCustomWebhook ? 'Webhook Active' : 'Webhook Required')
+      )
+    );
+
+    // Function to update the status text
+    const updateWebhookStatus = (isActive) => {
+        const statusSpan = $('#webhook-status');
+        if (statusSpan) {
+            statusSpan.textContent = isActive ? 'Webhook Active' : 'Webhook Required';
+            statusSpan.style.color = isActive ? '#28A745' : '#DC3545'; // Green for active, Red for required
+        }
+    };
+
+    // Attempt to insert before the main form, fallback to body
+    let targetElement = $(CONFIG.uiSelectors.form);
+    if (targetElement && targetElement.parentNode) {
+      targetElement.parentNode.insertBefore(webhookSection, targetElement);
+      updateWebhookStatus(hasCustomWebhook);
+    } else {
+      console.warn("Could not find '#my-servers-form' to insert webhook config section. Attempting to append to body.");
+      document.body.appendChild(webhookSection);
+      updateWebhookStatus(hasCustomWebhook);
+    }
+  };
 
 
   /**
@@ -423,28 +535,23 @@
    * Ensures the DOM is ready before executing.
    */
   const initializeScript = () => {
-    // Execute all feature modules
+    addDiscordWebhookConfigSection();
     initMapPicker();
-    fixServerLinks(); // Initial fix when the page loads
+    fixServerLinks();
     initCollapsibleSections();
     cleanupPromoInfo();
     initServerModePresets();
     cleanupUI();
-    setupPostSaveLinkFix(); // Set up the listener for save buttons
-
-    // --- New Discord Integration ---
-    addShareAllDiscordButton(); // Add the single button for all servers
-
-    // --- End New Discord Integration ---
+    setupPostSaveLinkFix();
+    addShareAllDiscordButton();
 
     console.log('Play-CS.com Server Manager script initialized!');
   };
 
   // --- Start the script ---
-  // Wait for the DOM to be fully loaded before running the script.
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeScript);
   } else {
-    initializeScript(); // DOM is already loaded
+    initializeScript();
   }
 })();
