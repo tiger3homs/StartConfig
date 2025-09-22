@@ -54,8 +54,9 @@
         checkboxes: {
           'mp_friendlyfire': true, 'mp_autoteambalance': false, 'mp_afkbomb': true,
           'afk_kick': false, 'statistics': true, 'votekick': false, 'bonus_slot': false,
-          'tfb': false, 'statsx': false, 'dib3': false, 'rwd_grenadedrop': true
-           
+          'tfb': false, 'statsx': false, 'dib3': false, 'rwd_grenadedrop': true,
+          'mp_clanwar': true, 'rnd_death': false
+
         },
         dropdowns: {
           'minimal_skill': '0', 'ping_limit': '1000', 'mp_roundtime': '1.75',
