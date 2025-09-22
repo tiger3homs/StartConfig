@@ -32,7 +32,6 @@ The script aims to make managing your Play-CS.com servers more efficient and use
 - **UI Cleanup:**
     - Hides unnecessary UI elements like chat buttons and lobby headers.
     - Adjusts padding for a cleaner layout.
-    - Cleans up "Promoted until" text in server cells.
 - **Improved Server Links:**
     - Automatically fixes malformed server join links (e.g., those missing `https:` or having extra `://`).
     - Ensures links are corrected after saving server settings.
