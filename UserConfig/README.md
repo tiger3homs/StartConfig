@@ -32,7 +32,7 @@ To use this script, you must first have a user script manager installed in your 
 
 The script monitors the game's interface for the match timer. Once the timer appears and is not at `0:00`, the script injects and submits each of the predefined commands into the in-game chat/console input field.
 
-The `executed` flag ensures that this action is performed only once per page load, preventing the commands from being sent repeatedly.
+The `executed` flag ensures that this action is performed only once per page load.
 
 ## Customization
 
