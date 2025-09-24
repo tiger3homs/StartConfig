@@ -2,6 +2,9 @@ CS Crosshair - Manager
 A highly customizable userscript for adding a custom crosshair to play-cs.com.
 This script provides a persistent, static crosshair with a full-featured editor, allowing you to fine-tune its appearance to your liking. It also includes a profile system, so you can save and switch between different crosshair designs effortlessly.
 
+<img width="1430" height="805" alt="image" src="https://github.com/user-attachments/assets/7929db8c-c0ce-4877-b7bc-68bdbbe789a2" />
+
+
 🚀 Features
 Editor with Sliders and Color Pickers: Easily adjust the crosshair's length, thickness, gap, color, and opacity.
 
