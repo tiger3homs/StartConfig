@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         CS Crosshair
+// @name         CS Crosshairr
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Optimized static line-style crosshair with customizable settings, profiles, shadow, border, and UI panel visibility toggled by Alt+Shift+Z, also managing PointerLock.
