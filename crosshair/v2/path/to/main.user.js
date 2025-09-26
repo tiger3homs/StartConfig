@@ -1,30 +1,25 @@
-// ==UserScript==
-// @name         CS Crosshairr
+/// ==UserScript==
+// @name         CS Crosshair (Refactored)
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      2.0
 // @description  Optimized static line-style crosshair with customizable settings, profiles, shadow, border, and UI panel visibility toggled by Alt+Shift+Z, also managing PointerLock.
 // @author       Tiger3homs aka (obbe.00 on discord) - Refactored by AI Assistant
 // @match        https://game.play-cs.com/*
 // @icon         https://play-cs.com/img/favicon.png
 // @grant        none
-// @require      https://github.com/tiger3homs/scripts2play-cs/new/main/crosshair/v2/path/to/config.js
-// @require      https://github.com/tiger3homs/scripts2play-cs/new/main/crosshair/v2//path/to/storage.js
-// @require      https://github.com/tiger3homs/scripts2play-cs/new/main/crosshair/v2//path/to/dom.js
-// @require      https://github.com/tiger3homs/scripts2play-cs/new/main/crosshair/v2//path/to/ui.js
-// @require      https://github.com/tiger3homs/scripts2play-cs/new/main/crosshair/v2//path/to/events.js
-// @require      https://github.com/tiger3homs/scripts2play-cs/new/main/crosshair/v2//path/to/crosshairManager.js
-// @resource     CROSSHAIR_CSS https://github.com/tiger3homs/scripts2play-cs/new/main/crosshair/v2/path/to/style.css
+// @require      https://github.com/tiger3homs/scripts2play-cs/blob/main/crosshair/v2/path/to/config.js
+// @require      https://github.com/tiger3homs/scripts2play-cs/blob/main/crosshair/v2/path/to/utils.js
+// @require      https://github.com/tiger3homs/scripts2play-cs/blob/main/crosshair/v2/path/to/profileManager.js
+// @require      https://github.com/tiger3homs/scripts2play-cs/blob/main/crosshair/v2/path/to/domManager.js
+// @require      https://github.com/tiger3homs/scripts2play-cs/blob/main/crosshair/v2/path/to/styleInjector.js
+// @require      https://github.com/tiger3homs/scripts2play-cs/blob/main/crosshair/v2/path/to/crosshairRenderer.js
+// @require      https://github.com/tiger3homs/scripts2play-cs/blob/main/crosshair/v2/path/to/uiManager.js
+// @require      https://github.com/tiger3homs/scripts2play-cs/blob/main/crosshair/v2/path/to/eventListeners.js
+// @require      https://github.com/tiger3homs/scripts2play-cs/blob/main/crosshair/v2/path/to/crosshairApp.js
 // ==/UserScript==
 
-(function () {
+(function() {
     'use strict';
-
-    // Inject CSS from resource
-    const styleElement = document.createElement('style');
-    styleElement.textContent = GM_getResourceText('CROSSHAIR_CSS');
-    document.head.appendChild(styleElement);
-
-    // Initialize the manager once all dependencies are loaded
-    window.crosshairInstance = new CrosshairManager();
+    // The main application class is now in crosshairApp.js and automatically initialized
+    // as it's the last script to be loaded and executed.
 })();
-```
