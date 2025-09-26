@@ -1,35 +1,36 @@
-// config.js - Global constants and default settings
-(function() {
-    'use strict';
+// config.js
+// Defines global constants and default configuration settings.
 
-    window.STORAGE_KEY = 'customCrosshairConfigV3';
-    window.UI_PANEL_TOGGLE_KEY_CODE = 'KeyZ';
-    window.UI_PANEL_TOGGLE_MODIFIERS = { alt: true, shift: true };
+// Changed storage key for V3
+window.CH_STORAGE_KEY = 'customCrosshairConfigV3';
+window.CH_UI_PANEL_TOGGLE_KEY_CODE = 'KeyZ';
+window.CH_UI_PANEL_TOGGLE_MODIFIERS = { alt: true, shift: true };
 
-    window.DEFAULT_PROFILE_SETTINGS = {
-        length: 10,
-        thickness: 2,
-        gap: 4,
-        color: '#ffffff',
-        opacity: 1.0,
-        shadowEnabled: false,
-        shadowColor: '#000000',
-        shadowBlur: 2,
-        shadowX: 1,
-        shadowY: 1,
-        borderEnabled: false,
-        borderColor: '#000000',
-        borderThickness: 1,
-    };
+// Default settings for a single crosshair profile
+window.CH_DEFAULT_PROFILE_SETTINGS = {
+    length: 10,
+    thickness: 2,
+    gap: 4,
+    color: '#ffffff',
+    opacity: 1.0,
+    shadowEnabled: false,
+    shadowColor: '#000000',
+    shadowBlur: 2,
+    shadowX: 1,
+    shadowY: 1,
+    borderEnabled: false,
+    borderColor: '#000000',
+    borderThickness: 1,
+};
 
-    window.DEFAULT_CONFIG = {
-        profiles: {
-            'Default': { ...window.DEFAULT_PROFILE_SETTINGS }
-        },
-        currentProfileName: 'Default',
-        enabled: true,
-        menuVisible: false,
-        uiPanelVisible: false,
-        gameWasPointerLocked: false
-    };
-})();
+// Global configuration structure
+window.CH_DEFAULT_CONFIG = {
+    profiles: {
+        'Default': { ...CH_DEFAULT_PROFILE_SETTINGS }
+    },
+    currentProfileName: 'Default',
+    enabled: true, // Global ON/OFF for the entire custom crosshair system
+    menuVisible: false,
+    uiPanelVisible: false,
+    gameWasPointerLocked: false
+};
