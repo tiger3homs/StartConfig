@@ -71,6 +71,52 @@ This script was initially created by `tiger3homs` (aka `obbe.00` on Discord) and
 
 <br>
 
+## Other Commands 
+
+blood "0"
+canvas_width "100"
+chat_enable "1"
+cl_bobcycle "0.8"
+cl_crosshair_color "0 0 0"
+cl_crosshair_size "small"
+cl_crosshair_translucent "1"
+cl_dynamiccrosshair "0"
+cl_minmodels "0"
+cl_weather "0"
+country_hide "1"
+ct_model "5"
+decals "0"
+feedback "1"
+fireinhole "1"
+fps_max "150"
+gamma "5"
+grenadechat_enable "1"
+hand2 "1"
+hud_centerid "1"
+inverted-mouse "0"
+knife_model "14"
+m_pitch "0.022"
+minmodels "0"
+motd_enable "1"
+mp_decals "1"
+name "OBBE_ex"
+net_optimization "0"
+notifications "1"
+r_drawviewmodel "1"
+sensitivity "1.49"
+sensivity "3"
+statsx_enable "1"
+stretch_canvas "1"
+switch_sound "0"
+tr_model "5"
+vid_mode "23"
+voice_chat_off "0"
+volume "0.2"
+wheel_jump_everywhere "1"
+zoom_sensitivity_ratio "1.2"
+_cl_autowepswitch "0"
+
+
 ***
 
 `
