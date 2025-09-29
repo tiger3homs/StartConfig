@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         CS Crosshair
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.2
 // @description  Optimized static line-style crosshair with customizable settings, profiles, shadow, border, and UI panel visibility toggled by Alt+Shift+Z, also managing PointerLock.
 // @author       Tiger3homs aka (obbe.00 on discord) - Refactored by AI Assistant
 // @match        https://game.play-cs.com/*
+// @icon         https://play-cs.com/img/favicon.png
 // @grant        none
 // ==/UserScript==
 
@@ -40,7 +41,7 @@
         currentProfileName: 'Default',
         enabled: true, // Global ON/OFF for the entire custom crosshair system
         menuVisible: false,
-        uiPanelVisible: false,
+        uiPanelVisible: false, // This now refers to the new single button's visibility
         gameWasPointerLocked: false
     };
 
@@ -193,10 +194,12 @@
             this.elements.menu.id = 'custom-crosshair-menu';
             document.body.appendChild(this.elements.menu);
 
-            // UI Control Panel
-            this.elements.uiControlPanel = document.createElement('div');
-            this.elements.uiControlPanel.id = 'custom-crosshair-ui-panel';
-            document.body.appendChild(this.elements.uiControlPanel);
+            // NEW: Crosshair UI Button
+            this.elements.crosshairBtn = document.createElement("a");
+            this.elements.crosshairBtn.className = "user-button crosshair-button";
+            this.elements.crosshairBtn.title = "Crosshair";
+            this.elements.crosshairBtn.innerHTML = `<i class="fa fa-crosshairs"></i>`;
+            document.body.appendChild(this.elements.crosshairBtn); // Initial display will be set by updateUIPanelVisibility
         }
 
         injectStyles() {
@@ -248,7 +251,7 @@
                 /* Menu Styles */
                 #custom-crosshair-menu {
                     position: fixed;
-                    top: 10px;
+                    top: 100px;
                     right: 10px;
                     background: rgba(34, 34, 34, 0.95);
                     color: #fff;
@@ -350,44 +353,28 @@
                 .profile-action-group button.danger { background-color: #d9534f; }
                 .profile-action-group button:hover { opacity: 0.9; }
 
-
-                /* UI Control Panel Styles */
-                #custom-crosshair-ui-panel {
+                /* NEW: Crosshair Button Styles */
+                .crosshair-button {
+                    z-index: 13;
+            display: none; /* Use flexbox for centering icon and text */
+                    top: 50px; /* slightly below fullscreen button */
+                    right: 0;
                     position: fixed;
-                    bottom: 10px;
-                    left: 10px;
-                    z-index: 99999;
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    display: ${this.config.uiPanelVisible ? 'block' : 'none'};
-                }
-                #custom-crosshair-ui-panel button {
-                    background-color: #4CAF50;
-                    border: none;
-                    color: white;
-                    padding: 8px 15px;
-                    text-align: center;
+                    font-family: '94cda963bd2cf599314fe42bc8bc131c093a88bc8d1ac5c378c70385c8d18fcb';
+                    color: #ff004c;
                     text-decoration: none;
-                    display: inline-block;
-                    font-size: 14px;
-                    margin: 4px 2px;
+  padding: 10px 15px;
+                    margin: 10px;
+                    background: rgba(0,0,0,0.7);
                     cursor: pointer;
-                    border-radius: 4px;
-                    transition: background-color 0.3s ease;
+  border-radius: 5px;
+  transition: background 0.2s;
                 }
-                #custom-crosshair-ui-panel button:hover {
-                    background-color: #45a049;
+                .crosshair-button i {
+            /* margin-right: 5px; Removed as we want just the cog icon */
                 }
-                #custom-crosshair-ui-panel button.disabled {
-                    background-color: #f44336;
-                }
-                #custom-crosshair-ui-panel button.active {
-                     background-color: #2196F3;
-                }
-                 #custom-crosshair-ui-panel button.secondary {
-                    background-color: #6c757d;
-                }
-                #custom-crosshair-ui-panel button.secondary:hover {
-                    background-color: #5a6268;
+                .crosshair-button:hover {
+                    background: rgba(0,0,0,0.9);
                 }
             `;
             document.head.appendChild(style);
@@ -426,18 +413,18 @@
         }
 
         // --- UI Interactions ---
-        toggleCrosshair = () => {
+        toggleCrosshair = () => { // This method is now unused for direct UI button, but kept for menu checkbox
             this.config.enabled = !this.config.enabled;
             this.saveConfig();
             this.renderCrosshair();
-            this.updateUIControlPanel();
+            // No direct button to update here anymore, only the menu checkbox
         }
 
         toggleMenu = () => {
             this.config.menuVisible = !this.config.menuVisible;
             this.elements.menu.style.display = this.config.menuVisible ? 'block' : 'none';
             this.saveConfig();
-            this.updateUIControlPanel();
+            // No direct button to update here anymore
         }
 
         createMenuControl(parent, labelText, type, key, options = {}) {
@@ -557,7 +544,6 @@
 
             // --- Shadow Settings ---
             const shadowSection = document.createElement('div');
-            shadowSection.innerHTML = '<h4 style="margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">Shadow</h4>';
             this.createMenuControl(shadowSection, 'Enable Shadow', 'checkbox', 'shadowEnabled');
             this.createMenuControl(shadowSection, 'Shadow Color', 'color', 'shadowColor');
             this.createMenuControl(shadowSection, 'Blur Radius', 'range', 'shadowBlur', { min: 0, max: 10, step: 1 });
@@ -567,7 +553,7 @@
 
             // --- Border Settings ---
             const borderSection = document.createElement('div');
-            borderSection.innerHTML = '<h4 style="margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">Border (Outline)</h4>';
+
             this.createMenuControl(borderSection, 'Enable Border', 'checkbox', 'borderEnabled');
             this.createMenuControl(borderSection, 'Border Color', 'color', 'borderColor');
             this.createMenuControl(borderSection, 'Border Thickness', 'range', 'borderThickness', { min: 1, max: 5, step: 1 });
@@ -603,25 +589,23 @@
             const keybinds = document.createElement('div');
             keybinds.innerHTML = `<p style="margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">Keybinds:</p>
                                   <ul>
-                                    <li>Toggle UI Panel & Pointer Lock: <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd></li>
+                                    <li>Toggle Crosshair Button & Pointer Lock: <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd></li>
                                   </ul>`;
             menu.appendChild(keybinds);
 
-const footer = document.createElement('div');
-footer.style.marginTop = '15px';
-footer.style.borderTop = '1px solid #444';
-footer.style.paddingTop = '10px';
-footer.style.textAlign = 'center';
-footer.innerHTML = `<a href="https://github.com/tiger3homs/"
-                       target="_blank"
-                       style="color:#4CAF50; text-decoration:none;">
-                        obbe.00 on discord
-                    </a>`;
-menu.appendChild(footer);
+            const footer = document.createElement('div');
+            footer.style.marginTop = '15px';
+            footer.style.borderTop = '1px solid #444';
+            footer.style.paddingTop = '10px';
+            footer.style.textAlign = 'center';
+            footer.innerHTML = `<a href="https://github.com/tiger3homs/"
+                                   target="_blank"
+                                   style="color:#4CAF50; text-decoration:none;">
+                                    obbe.00 on discord
+                                </a>`;
+            menu.appendChild(footer);
 
         };
-
-
 
         updateMenuProfileSelector() {
             const selector = this.elements.profileSelector;
@@ -647,57 +631,41 @@ menu.appendChild(footer);
             }
         }
 
-
-        setupUIControlPanel() {
-            const uiPanel = this.elements.uiControlPanel;
-            uiPanel.innerHTML = ''; // Clear existing buttons if any
-
-            this.elements.toggleCrosshairBtn = document.createElement('button');
-            this.elements.toggleCrosshairBtn.id = 'ch-toggle-btn';
-            this.elements.toggleCrosshairBtn.onclick = this.toggleCrosshair;
-            uiPanel.appendChild(this.elements.toggleCrosshairBtn);
-
-            this.elements.toggleMenuBtn = document.createElement('button');
-            this.elements.toggleMenuBtn.id = 'ch-menu-btn';
-            this.elements.toggleMenuBtn.onclick = this.toggleMenu;
-            uiPanel.appendChild(this.elements.toggleMenuBtn);
-
-            this.updateUIControlPanel();
-            this.updateUIPanelVisibility();
-        }
-
-        updateUIControlPanel() {
-            const { toggleCrosshairBtn, toggleMenuBtn } = this.elements;
-
-            if (toggleCrosshairBtn) {
-                toggleCrosshairBtn.textContent = this.config.enabled ? 'Crosshair ON' : 'Crosshair OFF';
-                toggleCrosshairBtn.classList.toggle('disabled', !this.config.enabled);
-            }
-            if (toggleMenuBtn) {
-                toggleMenuBtn.textContent = this.config.menuVisible ? 'Hide Menu' : 'Show Menu';
-                toggleMenuBtn.classList.toggle('active', this.config.menuVisible);
-            }
-        }
+        // REMOVED: setupUIControlPanel as it's replaced by the single crosshairBtn
+        // REMOVED: updateUIControlPanel as it's replaced by the single crosshairBtn
 
         updateUIPanelVisibility() {
-            this.elements.uiControlPanel.style.display = this.config.uiPanelVisible ? 'block' : 'none';
+            // Now controls the visibility of the single crosshairBtn
+            this.elements.crosshairBtn.style.display = this.config.uiPanelVisible ? 'block' : 'none';
+            // Also ensure the menu respects its own config, regardless of button visibility
+            this.elements.menu.style.display = this.config.menuVisible ? 'block' : 'none';
         }
 
         toggleUIPanelAndPointerLock = (event) => {
             if (event) event.preventDefault();
 
+            // Toggle the visibility state of the button
             this.config.uiPanelVisible = !this.config.uiPanelVisible;
             this.updateUIPanelVisibility();
             this.saveConfig();
 
             if (this.config.uiPanelVisible) {
+                // If button is now visible (UI is "open")
                 if (document.pointerLockElement) {
                     this.config.gameWasPointerLocked = true;
                     document.exitPointerLock();
                 } else {
                     this.config.gameWasPointerLocked = false;
                 }
+                // When the button appears, ensure the menu also appears if it was meant to be visible
+                if (this.config.menuVisible) {
+                     this.elements.menu.style.display = 'block';
+                }
             } else {
+                // If button is now hidden (UI is "closed")
+                // Hide the menu too, regardless of its previous state
+                this.config.menuVisible = false;
+                this.elements.menu.style.display = 'none';
                 if (this.config.gameWasPointerLocked) {
                     const gameCanvas = document.querySelector('canvas');
                     if (gameCanvas) {
@@ -711,9 +679,16 @@ menu.appendChild(footer);
             this.saveConfig();
         }
 
+        // NEW: Handler for clicking the new crosshair button
+        handleCrosshairButtonClick = () => {
+            this.config.menuVisible = !this.config.menuVisible;
+            this.elements.menu.style.display = this.config.menuVisible ? 'block' : 'none';
+            this.saveConfig();
+        }
+
         handlePointerLockChange = () => {
             if (!document.pointerLockElement && this.config.gameWasPointerLocked && !this.config.uiPanelVisible) {
-                // If pointer lock was active but is now gone, and UI is not visible,
+                // If pointer lock was active but is now gone, and UI *button* is not visible,
                 // it means user exited manually (e.g., Esc). We should not try to re-lock immediately.
                 this.config.gameWasPointerLocked = false;
                 this.saveConfig();
@@ -738,6 +713,9 @@ menu.appendChild(footer);
                 }
             });
 
+            // NEW: Add click listener for the new crosshair button
+            this.elements.crosshairBtn.addEventListener('click', this.handleCrosshairButtonClick);
+
             document.addEventListener('pointerlockchange', this.debounce(this.handlePointerLockChange, 50)); // Debounce to prevent rapid false positives
 
             window.addEventListener('resize', this.debounce(() => {
@@ -747,12 +725,11 @@ menu.appendChild(footer);
 
         initializeUI() {
             this.setupMenu(); // Rebuilds the entire menu including profile selector and controls
-            this.setupUIControlPanel();
-            this.elements.menu.style.display = this.config.menuVisible ? 'block' : 'none';
-            this.elements.uiControlPanel.style.display = this.config.uiPanelVisible ? 'block' : 'none';
+            // Replaced setupUIControlPanel with logic for the new single button
+            this.updateUIPanelVisibility(); // Set initial visibility of the crosshairBtn
+            this.elements.menu.style.display = this.config.menuVisible ? 'block' : 'none'; // Ensure menu visibility is also set
         }
     }
-
 
     // Initialize the manager
     new CrosshairManager();
