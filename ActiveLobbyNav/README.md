@@ -2,6 +2,9 @@
 
 This Tampermonkey script enhances the `play-cs.com` website by dynamically highlighting the active page in the lobby's side navigation menu.
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/54308c58-36da-41f7-add4-95158db337a7" />
+
+
 ## The Problem It Solves
 
 On `play-cs.com`, when navigating through different sections of the lobby (e.g., "Servers," "Profile," "Shop"), the side navigation menu (`.lobby3-side-nav`) **does not always visually indicate which page you are currently on.** This can lead to a less intuitive user experience, as users might not easily see their current location within the site's structure.
