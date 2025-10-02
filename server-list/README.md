@@ -1,4 +1,4 @@
-# Server List Grid ↔ Line Toggle (Persistent)
+# Server List Grid ↔ Line Toggle
 
 A Tampermonkey userscript for play-cs.com that allows you to toggle the server list display between a compact line view and the default card grid view. Your preference is saved locally, so your chosen view mode persists across page reloads.
 
