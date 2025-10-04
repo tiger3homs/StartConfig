@@ -20,14 +20,11 @@ This Tampermonkey userscript enhances the Play-CS.com gaming experience by provi
     *   [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
     *   [Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpbldmmepgdkmfapfmcctocadp)
     *   (and other browsers supporting extensions)
-2.  **Create a new script:**
-    *   Click on the Tampermonkey icon in your browser's toolbar.
-    *   Select "Create a new script...".
-3.  **Paste the script code:**
-    *   Delete any existing code in the editor (`// ==UserScript==` and `// ==/UserScript==` block, and the empty function).
-    *   Copy the entire content of `scoreboard_to_discord.user.js` (or the script provided above) and paste it into the Tampermonkey editor.
-4.  **Save the script:**
-    *   Go to `File > Save` (or press `Ctrl+S / Cmd+S`).
+    
+2.  *   Navigate to the script file in this repository (`scoreboard.user.js`).
+    *   Click the **"Raw"** button at the top right of the file viewer.
+    *   Tampermonkey will automatically open a new tab and ask you to confirm the installation.
+    *   Click **"Install"**.
 
 The script should now be active when you visit `https://game.play-cs.com/*`.
 
