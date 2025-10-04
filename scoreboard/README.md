@@ -21,10 +21,11 @@ This Tampermonkey userscript enhances the Play-CS.com gaming experience by provi
     *   [Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpbldmmepgdkmfapfmcctocadp)
     *   (and other browsers supporting extensions)
     
-2.  *   Navigate to the script file in this repository (`scoreboard.user.js`).
-    *   Click the **"Raw"** button at the top right of the file viewer.
-    *   Tampermonkey will automatically open a new tab and ask you to confirm the installation.
-    *   Click **"Install"**.
+2.
+   *   Navigate to the script file in this repository (`scoreboard.user.js`).
+   *   Click the **"Raw"** button at the top right of the file viewer.
+   *   Tampermonkey will automatically open a new tab and ask you to confirm the installation.
+   *   Click **"Install"**.
 
 The script should now be active when you visit `https://game.play-cs.com/*`.
 
