@@ -6,7 +6,7 @@ This Tampermonkey userscript enhances the Play-CS.com gaming experience by provi
 
 *   **Discord Webhook Integration:** Send detailed scoreboard information directly to a Discord channel.
 *   **Rich Embeds:** Scoreboards are formatted as visually appealing Discord embeds, including map name, scores, and player statistics.
-*   **Player Tracking:** Accumulates player kills and deaths across game rounds and even server reconnects (within a session), providing more accurate and persistent statistics.
+*   **Player Tracking:** Accumulates player kills and deaths across game rounds.
 *   **CORS Bypass:** Utilizes `GM_xmlhttpRequest` to bypass Cross-Origin Resource Sharing (CORS) restrictions, allowing direct communication with Discord webhooks.
 *   **Intuitive UI for Webhook Management:** A simple modal interface (triggered by `Alt+Shift+D`) allows users to set, update, or clear their Discord webhook URL, which is saved persistently.
 *   **Temporary Notifications:** Provides on-screen feedback for script actions (e.g., "Scoreboard sent!", "Webhook URL not set!").
