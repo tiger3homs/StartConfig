@@ -153,6 +153,49 @@
             .searchable-select-dropdown .option.hidden {
                 display: none;
             }
+
+            /* Toast Notifications */
+            #toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 10002;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .toast {
+                background-color: #333;
+                color: #eee;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                opacity: 0;
+                transition: opacity 0.3s, transform 0.3s;
+                transform: translateX(100%);
+                font-family: Arial, sans-serif;
+                font-size: 1em;
+                border-left: 5px solid #555;
+            }
+            .toast.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            .toast.success {
+                background-color: #28a745;
+                border-left-color: #218838;
+                color: white;
+            }
+            .toast.error {
+                background-color: #dc3545;
+                border-left-color: #c82333;
+                color: white;
+            }
+            .toast.info {
+                background-color: #17a2b8;
+                border-left-color: #138496;
+                color: white;
+            }
         `
     };
 
@@ -173,6 +216,29 @@
     };
 
     // --- Helper Functions ---
+    // --- Toast Notification System ---
+    let toastContainer = null;
+    function showToast(message, type = 'info', duration = 4000) {
+        if (!toastContainer) {
+            toastContainer = createAndAppendElement('div', document.body, { id: 'toast-container' });
+        }
+
+        const toast = createAndAppendElement('div', toastContainer, { classList: ['toast', type] }, message);
+
+        // Show the toast
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10); // Small delay for CSS transition
+
+        // Hide and remove the toast
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => {
+                toast.remove();
+            });
+        }, duration);
+    }
+
     const getElementById = (id) => document.getElementById(id);
     const createAndAppendElement = (tagName, parent, attributes = {}, innerHTML = '') => {
         const element = document.createElement(tagName);
@@ -373,7 +439,7 @@
                 <input type="radio" id="modeDeathmatch_${serverId}" name="gameMode_${serverId}" value="deathmatch"><label for="modeDeathmatch_${serverId}">Deathmatch</label>
             </div>
             <div class="action-buttons">
-                <button id="shareToDiscord_${serverId}" class="discord-btn"><i class="fa fa-discord" aria-hidden="true"></i> Share to Discord</button>
+                <button type="button" id="shareToDiscord_${serverId}" class="discord-btn"><i class="fa fa-discord" aria-hidden="true"></i> Share to Discord</button>
             </div>
         `);
 
@@ -387,7 +453,7 @@
         async function sendServerToDiscord(serverId, detailsDiv) {
             const webhookURL = GM_getValue('discordWebhookURL', '');
             if (!webhookURL) {
-                alert('No Discord webhook URL found. Please set it first using Alt+Shift+D or the "Share to Discord" button.');
+                showToast('Set your Discord webhook URL first (Alt+Shift+D).', 'info');
                 showDiscordWebhookModal();
                 return;
             }
@@ -427,19 +493,20 @@
                 });
 
                 if (response.ok) {
-                    alert(`✅ Server "${serverName}" shared successfully to Discord!`);
+                    showToast(`Server "${serverName}" shared successfully!`, 'success');
                 } else {
                     const errText = await response.text();
                     console.error('Discord webhook error:', errText);
-                    alert('❌ Failed to send to Discord. Check console for details.');
+                    showToast('Failed to send to Discord. See console.', 'error');
                 }
             } catch (error) {
                 console.error('Discord send failed:', error);
-                alert('❌ Network or webhook error while sending to Discord.');
+                showToast('Network error. Could not send to Discord.', 'error');
             }
         }
 
-        serverControls.querySelector(`#shareToDiscord_${serverId}`)?.addEventListener('click', () => {
+        serverControls.querySelector(`#shareToDiscord_${serverId}`)?.addEventListener('click', (event) => {
+            event.preventDefault();
             sendServerToDiscord(serverId, detailsDiv);
         });
         return serverControls;
@@ -499,10 +566,10 @@
                 // Basic URL validation
                 if (url.startsWith('https://discord.com/api/webhooks/')) {
                     GM_setValue('discordWebhookURL', url);
-                    console.log('Discord Webhook URL saved:', url);
+                    showToast('Webhook URL saved successfully!', 'success');
                     hideDiscordWebhookModal();
                 } else {
-                    alert('Please enter a valid Discord webhook URL starting with "https://discord.com/api/webhooks/"');
+                    showToast('Invalid webhook URL.', 'error');
                 }
             } else {
                 GM_deleteValue('discordWebhookURL');
