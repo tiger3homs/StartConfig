@@ -2,6 +2,9 @@
 
 **Transform your play-cs.com/myservers page into a powerful, organized server management hub.**
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f19ab61f-243f-4d51-9d41-0cea29130153" />
+
+
 This Tampermonkey script provides a complete overhaul of the server management interface on [play-cs.com/myservers](https://play-cs.com/myservers). It replaces the standard table layout with a modern, collapsible card system, adding numerous quality-of-life features designed to make managing your Counter-Strike servers more efficient and enjoyable.
 
 ## ✨ Features
@@ -30,12 +33,12 @@ This Tampermonkey script provides a complete overhaul of the server management i
 ## 🚀 Installation
 
 1.  **Install a UserScript Manager:** If you don't have one already, install a browser extension like [Tampermonkey](https://www.tampermonkey.net/) (recommended for Chrome, Edge, Safari, Opera, Firefox).
-2.  **Create a New User Script:**
-    *   Click on the Tampermonkey icon in your browser toolbar.
-    *   Select "Create a new script..."
-3.  **Paste the Script:** Delete any default code in the new script editor and paste the entire content of the `CS_Server_Manager.user.js` file (provided below) into the editor.
-4.  **Save:** Save the script (usually File > Save or Ctrl+S / Cmd+S).
-5.  **Navigate to Play-CS:** Go to [https://play-cs.com/myservers](https://play-cs.com/myservers) or [https://play-cs.com/your_username/myservers](https://play-cs.com/your_username/myservers). The page should now be transformed!
+2.  **install the Script:**
+    *   Navigate to the script file in this repository (`v3.user.js`).
+    *   Click the **"Raw"** button at the top right of the file viewer.
+    *   Tampermonkey will automatically open a new tab and ask you to confirm the installation.
+    *   Click **"Install"**.
+3.  **Navigate to Play-CS:** Go to [https://play-cs.com/myservers](https://play-cs.com/myservers). The page should now be transformed!
 
 ## ⚙️ Usage
 
