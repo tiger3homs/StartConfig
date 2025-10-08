@@ -2,7 +2,7 @@
 // @name         CS Server Manager
 // @namespace    http://tampermonkey.net/
 // @version      3.1
-// @description  Refactored script to transform the server table into collapsible cards, with per-server controls, presets, dynamic updates, and collapsible sections for "New server" and "Specifications".
+// @description  Transform your play-cs.com/myservers page into a powerful, organized server management hub.
 // @author       tiger3homs aka (obbe.00) on discord
 // @match        https://play-cs.com/myservers
 // @match        https://play-cs.com/*/myservers
