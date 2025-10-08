@@ -1,4 +1,4 @@
-# CS Server Manager Reforged (Tampermonkey Script)
+# CS Server Manager (Tampermonkey Script)
 
 **Transform your play-cs.com/myservers page into a powerful, organized server management hub.**
 
