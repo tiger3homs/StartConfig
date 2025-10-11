@@ -10,6 +10,7 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_deleteValue
+// @grant        unsafeWindow
 // ==/UserScript==
 
 (function() {
@@ -19,6 +20,7 @@
 
     const CONFIG = {
         mainFormId: 'my-servers-form',
+        colors: [15158332, 3066993, 3447003, 15105570, 10181046, 16776960], // Red, Green, Blue, Orange, Purple, Yellow
         originalTableSelector: 'table.table',
         serverRowClass: 'myserver',
         globalSaveButtonClass: 'save-btn3',
@@ -67,6 +69,9 @@
             .action-buttons button:hover { background-color: #0056b3; }
             .discord-btn { background-color: #7289da; }
             .discord-btn:hover { background-color: #6778c4; }
+
+            .copy-link-btn { background-color: #17a2b8; }
+            .copy-link-btn:hover { background-color: #138496; }
 
             /* Global Save Button */
             #my-servers-form .table thead, #my-servers-form > .save-btn3 { display: none; }
@@ -307,6 +312,27 @@
         }
     }
 
+    /** Copy Server Link and PIN to Clipboard */
+    async function copyServerLinkToClipboard(serverId, detailsDiv) {
+        const serverLink = detailsDiv.querySelector(CONFIG.SELECTORS.serverLink(serverId))?.href || '';
+        const pin = detailsDiv.querySelector(`input[name="pin_${serverId}"]`)?.value || '';
+
+        if (!serverLink) {
+            showToast('Could not find server link.', 'error');
+            return;
+        }
+
+        const textToCopy = `${serverLink}\n\n\n${pin}`;
+
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            showToast('Server link and PIN copied!', 'success');
+        } catch (err) {
+            showToast('Failed to copy link.', 'error');
+            console.error('Clipboard copy error:', err);
+        }
+    }
+
     /** Share Server Info to Discord */
     async function sendServerToDiscord(serverId, detailsDiv) {
         const webhookURL = GM_getValue('discordWebhookURL', '');
@@ -316,21 +342,40 @@
             return;
         }
 
+        // Helper to wait for a global variable
+        const waitForValue = (getValue, timeout = 2000, interval = 100) => {
+            return new Promise((resolve) => {
+                const check = () => {
+                    const value = getValue();
+                    if (value) {
+                        resolve(value);
+                    } else if (timeout > 0) {
+                        timeout -= interval;
+                        setTimeout(check, interval);
+                    } else {
+                        resolve(null); // Resolve with null if timeout is reached
+                    }
+                };
+                check();
+            });
+        };
+
+        const username = await waitForValue(() => unsafeWindow.cvars?.name) || 'a user';
         const serverName = detailsDiv.querySelector(CONFIG.SELECTORS.serverNameInput(serverId))?.value || `Server ${serverId}`;
         const mapName = detailsDiv.querySelector(`select[name="server[${serverId}][map]"] option:checked`)?.textContent || 'N/A';
         const pin = detailsDiv.querySelector(`input[name="pin_${serverId}"]`)?.value || 'None';
         const serverLink = detailsDiv.querySelector(CONFIG.SELECTORS.serverLink(serverId))?.href || 'No link';
-        const username = document.querySelector('.user-name')?.textContent.trim() || 'a user';
+        const randomColor = CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)];
 
         const payload = {
             username: 'Server Manager Bot',
             embeds: [{
                 title: `🎮 ${serverName}`,
-                color: 3447003,
+                color: randomColor,
                 fields: [
                     { name: '🗺️ Map', value: mapName, inline: true },
                     { name: '🔒 PIN', value: pin, inline: true },
-                    { name: '🔗 Join Link', value: `[Click to Join](${serverLink})`, inline: false }
+                    { name: '🔗 Join Link', value: serverLink, inline: false }
                 ],
                 footer: { text: `Shared by ${username}` },
                 timestamp: new Date().toISOString()
@@ -453,6 +498,7 @@
                         <input type="radio" id="modeDeathmatch_${serverId}" name="gameMode_${serverId}" value="deathmatch"><label for="modeDeathmatch_${serverId}">Deathmatch</label>
                     </div>
                     <div class="action-buttons">
+                        <button type="button" class="copy-link-btn" data-server-id="${serverId}"><i class="fa fa-clipboard"></i> Copy Link</button>
                         <button type="button" class="discord-btn" data-server-id="${serverId}"><i class="fa fa-discord"></i> Share to Discord</button>
                     </div>`);
                 detailsDiv.insertBefore(serverControls, detailsDiv.firstChild);
@@ -473,6 +519,7 @@
                     if (e.target.name === `gameMode_${serverId}`) applyPreset(e.target.value, serverId, detailsDiv);
                 });
                 serverControls.querySelector('.discord-btn').addEventListener('click', () => sendServerToDiscord(serverId, detailsDiv));
+                serverControls.querySelector('.copy-link-btn').addEventListener('click', () => copyServerLinkToClipboard(serverId, detailsDiv));
 
                 const updateHeaderCallback = () => {
                     const latestIsEnabled = detailsDiv.querySelector(CONFIG.SELECTORS.serverEnabledCheckbox(serverId))?.checked;
